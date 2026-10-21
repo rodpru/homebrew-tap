@@ -12,13 +12,14 @@ cask "orchard" do
     strategy :github_latest
   end
 
+  depends_on :macos
+
   app "Orchard.app"
   binary "#{appdir}/Orchard.app/Contents/MacOS/orchard"
 
   # The app is not notarized. Remove the quarantine flag so Gatekeeper does not block the first launch.
-  postflight do
-    system_command "/usr/bin/xattr",
-                   args: ["-dr", "com.apple.quarantine", "#{appdir}/Orchard.app"]
+  postflight_steps do
+    run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{appdir}}/Orchard.app"]
   end
 
   zap trash: [
